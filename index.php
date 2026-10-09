@@ -10,6 +10,14 @@ switch ($page) {
         $titrePage = "Accueil - Centre de formation médico-sociale";
         $data['message'] = "Bienvenue sur le site de formation médico-sociale !";
         break;
+    
+    case 'tuto':
+        $titrePage = "Page de tuto - Centre de formation médico-sociale";
+        break;
+
+    case 'message':
+        $titrePage = "Page de message - Centre de formation médico-sociale";
+        break;
 
     default:
         $titrePage = "Erreur 404";

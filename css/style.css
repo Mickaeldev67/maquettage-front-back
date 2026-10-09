@@ -1,4 +1,331 @@
-* {
-    padding: 0;
-    margin: 0;
+/* =========================================================
+   Mes tutos pas à pas — feuille de style commune
+   Contrastes vérifiés (WCAG 2.2) : voir commentaires des tokens
+   ========================================================= */
+
+/* ---------- 1. Police ---------- */
+/* Chargée dans le <head> via Google Fonts (Atkinson Hyperlegible) */
+
+/* ---------- 2. Tokens de couleur : mode clair ---------- */
+:root {
+  --bg: #FFFFFF;
+  --soft: #F4F6F9;          /* encre dessus : 15,2:1 */
+  --card: #FFFFFF;
+  --info: #E8F1FA;          /* bleu dessus : 7,4:1 */
+  --ink: #1B1F2A;           /* sur blanc : 16,5:1 */
+  --muted: #4A5160;         /* sur blanc : 8,0:1 */
+  --primary: #0B4F8A;       /* sur blanc : 8,4:1 */
+  --primary-hover: #083A66; /* blanc dessus : 11,6:1 */
+  --on-primary: #FFFFFF;
+  --line: #4A5160;          /* bordures : 8,0:1 (≥ 3:1 exigé) */
+  --warn: #8A4B00;          /* sur #FFF4E5 : 6,3:1 */
+  --warn-bg: #FFF4E5;
+  --ok: #1E6B34;            /* sur blanc : 6,6:1 */
+  --error: #B3261E;         /* sur blanc : 6,5:1 */
+  --focus: #FFDD00;         /* encre dessus : 12,2:1 */
+  --focus-ink: #1B1F2A;
+
+  --radius: 12px;
+  --maxw: 75rem;
+  --maxw-text: 62.5rem;
+  color-scheme: light;
+}
+
+/* ---------- 3. Mode sombre ---------- */
+/* a) automatique si le système est en sombre et que l'utilisateur n'a rien choisi */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #121620; --soft: #1A1F2B; --card: #1E2430; --info: #1A1F2B;
+    --ink: #F2F4F8;      /* 16,4:1 */
+    --muted: #C9CFDA;    /* 11,6:1 */
+    --primary: #8EC5FF;  /* 10,0:1 */
+    --primary-hover: #B9DCFF;
+    --on-primary: #121620;
+    --line: #C9CFDA;
+    --warn: #FFB86B;     /* 9,1:1 sur #1E2430 */
+    --warn-bg: #1E2430;
+    --ok: #7FD49A;       /* 10,2:1 */
+    --error: #FF9A92;
+    color-scheme: dark;
+  }
+}
+/* b) forcé par le bouton "Affichage sombre" */
+:root[data-theme="dark"] {
+  --bg: #121620; --soft: #1A1F2B; --card: #1E2430; --info: #1A1F2B;
+  --ink: #F2F4F8; --muted: #C9CFDA; --primary: #8EC5FF; --primary-hover: #B9DCFF;
+  --on-primary: #121620; --line: #C9CFDA; --warn: #FFB86B; --warn-bg: #1E2430;
+  --ok: #7FD49A; --error: #FF9A92;
+  color-scheme: dark;
+}
+
+/* ---------- 4. Base ---------- */
+/* La taille de base est 112,5 % (18 px). Le JS la passe à 137,5 % / 162,5 %.
+   Tout le reste est en rem/em : le zoom navigateur à 200 % fonctionne aussi. */
+html { font-size: 112.5%; }
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Atkinson Hyperlegible", Verdana, sans-serif;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--ink);
+}
+img { max-width: 100%; height: auto; }
+/* L'attribut hidden doit toujours gagner, même sur un élément en display:flex */
+[hidden] { display: none !important; }
+h1, h2, h3 { line-height: 1.25; margin: 0; }
+p { margin: 0; }
+a { color: var(--primary); text-underline-offset: 0.2em; }
+a:hover { color: var(--primary-hover); text-decoration-thickness: 3px; }
+
+.container { max-width: var(--maxw); margin: 0 auto; padding-inline: 1.5rem; }
+.container--text { max-width: var(--maxw-text); }
+
+/* Texte réservé aux lecteurs d'écran */
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ---------- 5. Focus clavier (RGAA 10.7) ---------- */
+:focus-visible {
+  outline: 3px solid var(--focus-ink);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--focus);
+}
+:root[data-theme="dark"] :focus-visible { outline-color: var(--focus); box-shadow: 0 0 0 6px var(--focus-ink); }
+/* Titres qui reçoivent le focus par JS : pas de cadre gênant */
+[tabindex="-1"]:focus { outline: none; box-shadow: none; }
+
+/* ---------- 6. Lien d'évitement (RGAA 12.7) ---------- */
+.skip-link {
+  position: absolute; left: 1rem; top: -100px; z-index: 100;
+  padding: 0.7rem 1.1rem; background: var(--focus); color: var(--focus-ink);
+  font-weight: 700; border: 2px solid var(--focus-ink); border-radius: 8px;
+  text-decoration: none;
+}
+.skip-link:focus { top: 0.5rem; }
+
+/* ---------- 7. Barre d'accessibilité ---------- */
+.a11y-bar { background: var(--soft); border-bottom: 2px solid var(--line); }
+.a11y-bar .container {
+  display: flex; flex-wrap: wrap; gap: 0.8rem 2rem;
+  align-items: center; justify-content: flex-end; padding-block: 0.6rem;
+}
+.a11y-group { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+.a11y-group__label { font-weight: 700; }
+
+/* ---------- 8. Boutons (cible ≥ 48 px, WCAG 2.5.8) ---------- */
+.btn {
+  display: inline-flex; gap: 0.6rem; align-items: center; justify-content: center;
+  min-height: 3rem; min-width: 3rem; padding: 0 1.3rem;
+  border: 2px solid var(--primary); border-radius: 10px;
+  background: var(--card); color: var(--primary);
+  font: inherit; font-weight: 700; text-decoration: none; cursor: pointer;
+}
+.btn:hover { border-color: var(--primary-hover); color: var(--primary-hover); }
+.btn--primary { background: var(--primary); color: var(--on-primary); }
+.btn--primary:hover { background: var(--primary-hover); color: var(--on-primary); }
+.btn--lg { min-height: 3.4rem; padding: 0 1.6rem; }
+.btn[aria-pressed="true"] { background: var(--primary); color: var(--on-primary); }
+.btn svg { flex-shrink: 0; }
+.btn-size { padding: 0 0.7rem; }
+.btn-size[data-size="1"] { font-size: 1.1em; }
+.btn-size[data-size="2"] { font-size: 1.25em; }
+
+/* ---------- 9. En-tête ---------- */
+.site-header { border-bottom: 2px solid var(--line); }
+.site-header .container {
+  display: flex; flex-wrap: wrap; gap: 1rem 2rem;
+  align-items: center; justify-content: space-between; padding-block: 1rem;
+}
+.logo { display: flex; gap: 0.8rem; align-items: center; color: var(--ink); text-decoration: none; }
+.logo:hover { color: var(--ink); }
+.logo__icon {
+  width: 3rem; height: 3rem; border-radius: 10px; flex-shrink: 0;
+  background: var(--primary); color: var(--on-primary);
+  display: flex; align-items: center; justify-content: center;
+}
+.logo__text { display: flex; flex-direction: column; line-height: 1.25; }
+.logo__name { font-size: 1.2rem; font-weight: 700; }
+.logo__sub { color: var(--muted); font-size: 0.9rem; }
+
+.main-nav ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1.5rem; }
+.main-nav a { display: inline-block; padding: 0.6rem 0.2rem; font-weight: 700; }
+.main-nav a[aria-current="page"] {
+  color: var(--ink); text-decoration: none; border-bottom: 4px solid var(--primary);
+}
+
+/* ---------- 10. Pied de page ---------- */
+.site-footer { border-top: 2px solid var(--line); background: var(--soft); margin-top: 3rem; }
+.site-footer .container {
+  display: flex; flex-wrap: wrap; gap: 1rem 2rem;
+  justify-content: space-between; align-items: center; padding-block: 2rem;
+}
+.site-footer p { color: var(--muted); }
+.site-footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.5rem; }
+
+/* =========================================================
+   PAGE D'ACCUEIL
+   ========================================================= */
+.hero { background: var(--soft); }
+.hero .container { padding-block: 3rem; display: flex; flex-direction: column; gap: 1.2rem; }
+.hero h1 { font-size: 2.4rem; max-width: 22ch; }
+.hero__intro { font-size: 1.15rem; color: var(--muted); max-width: 60ch; }
+
+.search { display: flex; flex-direction: column; gap: 0.4rem; max-width: 45rem; }
+.search label { font-weight: 700; font-size: 1.1rem; }
+.search__row { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.search input {
+  flex: 1 1 18rem; min-height: 3.4rem; padding: 0 1rem;
+  border: 3px solid var(--line); border-radius: 10px;
+  font: inherit; color: var(--ink); background: var(--bg);
+}
+.search input::placeholder { color: var(--muted); } /* 8:1, lisible */
+
+.section { padding-block: 3rem; }
+.section--soft { background: var(--soft); }
+.section h2 { font-size: 1.8rem; margin-bottom: 1.4rem; }
+
+.themes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.2rem;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr)); }
+.theme-card {
+  display: flex; gap: 1rem; align-items: center; min-height: 6.5rem; padding: 1.1rem;
+  border: 2px solid var(--line); border-radius: 14px; background: var(--card);
+  color: var(--ink); text-decoration: none; height: 100%;
+}
+.theme-card:hover { border-color: var(--primary); border-width: 3px; padding: calc(1.1rem - 1px); color: var(--ink); }
+.theme-card__icon {
+  width: 3.6rem; height: 3.6rem; flex-shrink: 0; border-radius: 14px;
+  background: var(--info); color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+}
+.theme-card__title { display: block; font-size: 1.2rem; font-weight: 700; color: var(--primary); text-decoration: underline; }
+.theme-card__desc { display: block; color: var(--muted); line-height: 1.35; margin-top: 0.2rem; }
+
+.popular { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.8rem; }
+.popular li {
+  display: flex; flex-wrap: wrap; gap: 0.7rem 1.5rem; align-items: center; justify-content: space-between;
+  padding: 1.1rem 1.4rem; background: var(--card); border: 2px solid var(--line); border-radius: 14px;
+}
+.popular a { font-size: 1.15rem; font-weight: 700; }
+.tags { display: flex; flex-wrap: wrap; gap: 0.6rem; list-style: none; margin: 0; padding: 0; }
+.tag { padding: 0.2rem 0.8rem; border: 2px solid var(--line); border-radius: 999px; }
+
+.help-box {
+  display: flex; flex-wrap: wrap; gap: 1.2rem 2rem; align-items: center;
+  padding: 1.6rem; border: 3px solid var(--primary); border-radius: 16px;
+}
+.help-box__text { flex: 1 1 20rem; }
+.help-box h2 { font-size: 1.4rem; margin: 0; }
+
+/* =========================================================
+   PAGE TUTORIEL
+   ========================================================= */
+.tuto { padding-block: 1.4rem 2rem; display: flex; flex-direction: column; gap: 1.4rem; }
+
+.breadcrumb ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; color: var(--muted); }
+.breadcrumb li:not(:last-child)::after { content: "›"; margin-left: 0.5rem; }
+.breadcrumb [aria-current="page"] { color: var(--ink); font-weight: 700; }
+
+.tuto__head h1 { font-size: 2.2rem; }
+.tuto__subtitle { color: var(--muted); margin-top: 0.3rem; }
+
+.mode-switch { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+
+/* Avancement en 3 parties */
+.parts { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); }
+.parts li {
+  display: flex; gap: 0.6rem; align-items: center; line-height: 1.3;
+  padding: 0.6rem 0.75rem; border: 2px solid var(--line); border-radius: 10px; background: var(--card);
+}
+.parts__mark {
+  width: 1.8rem; height: 1.8rem; flex-shrink: 0; border-radius: 999px; border: 2px solid currentColor;
+  display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9em;
+}
+.parts li[aria-current="step"] { background: var(--primary); border-color: var(--primary); color: var(--on-primary); font-weight: 700; }
+.parts li.is-done { border-color: var(--ok); color: var(--ok); }
+
+/* Carte d'écran */
+.screen {
+  display: flex; flex-direction: column; gap: 1.2rem;
+  padding: 2rem; border: 2px solid var(--line); border-radius: 18px; background: var(--card);
+}
+.screen__body { display: flex; flex-direction: column; gap: 1.2rem; }
+.screen h2 { font-size: 1.7rem; }
+.screen__step-label { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
+.screen__instruction { max-width: 30ch; line-height: 1.35; }
+.screen__hint { color: var(--muted); }
+
+.progress { height: 0.75rem; border-radius: 999px; background: var(--soft); border: 2px solid var(--line); overflow: hidden; }
+.progress__bar { height: 100%; background: var(--primary); transition: width 0.3s ease; }
+
+.figure { margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.figure img, .figure__placeholder { border-radius: 14px; border: 2px solid var(--line); }
+.figure__placeholder {
+  aspect-ratio: 16 / 9; max-height: 20rem; border-style: dashed; background: var(--soft); color: var(--muted);
+  display: flex; align-items: center; justify-content: center; text-align: center; padding: 1.5rem;
+}
+
+/* Liste "À prévoir" en cases à cocher */
+.checklist { margin: 0; padding: 0; border: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.check {
+  display: flex; gap: 1rem; align-items: center; min-height: 3.6rem; padding: 0.7rem 1.1rem;
+  border: 2px solid var(--line); border-radius: 12px; cursor: pointer; font-size: 1.1rem;
+}
+.check:has(input:checked) { border-color: var(--ok); }
+.check input { width: 1.8rem; height: 1.8rem; flex-shrink: 0; margin: 0; accent-color: var(--primary); }
+.status-ok { font-weight: 700; color: var(--ok); }
+
+/* Vigilance */
+.warn-title { display: flex; gap: 0.7rem; align-items: center; color: var(--warn); }
+.warn-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+.warn-list li { padding: 1rem 1.2rem; border: 3px solid var(--warn); border-radius: 12px; background: var(--warn-bg); font-size: 1.1rem; }
+.success {
+  display: flex; gap: 0.75rem; align-items: center; padding: 1rem 1.2rem;
+  border: 3px solid var(--ok); border-radius: 12px; color: var(--ok); font-weight: 700; font-size: 1.15rem;
+}
+
+.screen__nav {
+  display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between;
+  padding-top: 1rem; border-top: 2px solid var(--line);
+}
+.screen__nav .btn--primary { margin-left: auto; }
+
+/* Vue "Toute la fiche" */
+.full { display: flex; flex-direction: column; gap: 1.4rem; }
+.full section { padding: 1.6rem; border: 2px solid var(--line); border-radius: 16px; background: var(--card); }
+.full h2 { font-size: 1.5rem; margin-bottom: 0.6rem; }
+.full ul, .full ol { margin: 0; padding-left: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; }
+.full .full__essentiel { border-color: var(--primary); }
+.full .full__vigil { border: 3px solid var(--warn); background: var(--warn-bg); }
+
+/* Glossaire repliable */
+.glossary { border: 2px solid var(--line); border-radius: 16px; background: var(--info); }
+.glossary h2 { font-size: 1.3rem; }
+.glossary__toggle {
+  width: 100%; min-height: 4rem; padding: 0 1.2rem; display: flex; gap: 0.8rem;
+  align-items: center; justify-content: space-between; border: 0; border-radius: 16px;
+  background: transparent; color: var(--ink); font: inherit; font-weight: 700; text-align: left; cursor: pointer;
+}
+.glossary__toggle .chevron { transition: transform 0.2s ease; }
+.glossary__toggle[aria-expanded="true"] .chevron { transform: rotate(180deg); }
+.glossary dl { margin: 0; padding: 0 1.3rem 1.3rem; display: flex; flex-direction: column; gap: 0.8rem; }
+.glossary dl > div { padding: 0.8rem 1.1rem; background: var(--card); border: 2px solid var(--line); border-radius: 12px; }
+.glossary dt { font-weight: 700; color: var(--primary); }
+.glossary dd { margin: 0.2rem 0 0; }
+
+.source { color: var(--muted); font-size: 1rem; }
+
+/* ---------- 11. Respect des préférences de mouvement ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
+
+/* ---------- 12. Impression : la fiche complète, sans les commandes ---------- */
+@media print {
+  .a11y-bar, .site-header nav, .mode-switch, .parts, .screen, .skip-link, .site-footer, .glossary__toggle .chevron { display: none !important; }
+  .full[hidden], #liste-mots[hidden] { display: flex !important; }
+  body { font-size: 12pt; }
 }
