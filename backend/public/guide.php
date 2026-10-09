@@ -27,7 +27,7 @@ try {
         exit;
     }
 
-    pdfToStructuredJson($pdf);
+    echo pdfToStructuredJson($pdf);
 } catch (Throwable $e) {
     http_response_code(500);
     echo json_encode(['error' => 'Erreur lors de la lecture du PDF']);
