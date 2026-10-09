@@ -16,14 +16,14 @@ switch ($page) {
         $page = '404';
         break;
 }
-include 'header.php';
+include './front/header.php';
 
-$viewFile = $page . '.php';
+$viewFile = './front/' . $page . '.php';
 if (file_exists($viewFile)) {
     include $viewFile;
 } else {
     echo "<h2>Erreur 404</h2><p>La page demandée est introuvable.</p>";
 }
 
-include 'footer.php';
+include './front/footer.php';
 ?>
